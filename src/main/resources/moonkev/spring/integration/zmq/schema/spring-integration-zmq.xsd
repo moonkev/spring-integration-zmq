@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://github.com/moonkev/spring-integration-zmq"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:integration="http://www.springframework.org/schema/integration"
+	targetNamespace="http://github.com/moonkev/spring-integration-zmq"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" />
+	<xsd:import namespace="http://www.springframework.org/schema/integration"
+		schemaLocation="http://www.springframework.org/schema/integration/spring-integration-3.0.xsd" />
+
+	<xsd:annotation>
+		<xsd:documentation><![CDATA[
+	Defines the configuration elements for Spring Integration ZMQ channel endpoints
+		]]></xsd:documentation>
+	</xsd:annotation>
+	
+	<xsd:element name="context-manager">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an outbound ZMQ socket-sending Channel Adapter.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="id" type="xsd:string" default="zmqContextManager" />
+			<xsd:attribute name="io-threads" type="xsd:string" default="1" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="inbound-channel-adapter">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a udp inbound Channel Adapter for receiving incoming udp packets.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="abstract-zmq-channel-adapter">
+					<xsd:attribute name="error-channel" type="xsd:string">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<tool:annotation kind="ref">
+									<tool:expected-type
+										type="org.springframework.integration.MessageChannel" />
+								</tool:annotation>
+							</xsd:appinfo>
+							<xsd:documentation>
+								If a (synchronous) downstream exception is
+								thrown and an "error-channel" is specified,
+								the
+								MessagingException will be sent to this channel. Otherwise, any
+								such exception
+								will simply be logged by the channel adapter.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="outbound-channel-adapter">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an outbound ZMQ socket-sending Channel Adapter.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="abstract-zmq-channel-adapter">
+					<xsd:all>
+						<xsd:element name="request-handler-advice-chain" type="integration:adviceChainType"
+							minOccurs="0" maxOccurs="1" />
+					</xsd:all>
+					<xsd:attribute name="task-executor" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								Specifies a specific Executor to be used for handling acknowledgments in
+								the UDP adapter. If not supplied, an internal
+								pooled executor will be used. Needed on some platforms that require
+								the use of specific
+								task executors such as a WorkManagerTaskExecutor.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="order">
+						<xsd:annotation>
+							<xsd:documentation>
+								Specifies the order for invocation when this
+								endpoint is connected as a
+								subscriber to a SubscribableChannel.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="outbound-gateway">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an outbound ZMQ socket-sending Outbound Gateway.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="abstract-zmq-message-endpoint">
+					<xsd:all>
+						<xsd:element name="request-handler-advice-chain" type="integration:adviceChainType"
+							minOccurs="0" maxOccurs="1" />
+					</xsd:all>
+					<xsd:attribute name="request-channel" type="xsd:string">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<tool:annotation kind="ref">
+									<tool:expected-type
+										type="org.springframework.integration.MessageChannel" />
+								</tool:annotation>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="reply-channel" type="xsd:string">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<tool:annotation kind="ref">
+									<tool:expected-type
+										type="org.springframework.integration.MessageChannel" />
+								</tool:annotation>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="task-executor" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								Specifies a specific Executor to be used for handling acknowledgments in
+								the UDP adapter. If not supplied, an internal
+								pooled executor will be used. Needed on some platforms that require
+								the use of specific
+								task executors such as a WorkManagerTaskExecutor.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="order">
+						<xsd:annotation>
+							<xsd:documentation>
+								Specifies the order for invocation when this
+								endpoint is connected as a
+								subscriber to a SubscribableChannel.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="send-timeout" type="xsd:string" />
+					<xsd:attribute name="receive-timeout" type="xsd:string" />
+					<xsd:attribute name="linger" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="abstract-zmq-channel-adapter">
+		<xsd:complexContent>
+			<xsd:extension base="abstract-zmq-message-endpoint">
+				<xsd:attribute name="channel" type="xsd:string">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<tool:annotation kind="ref">
+								<tool:expected-type
+									type="org.springframework.integration.MessageChannel" />
+							</tool:annotation>
+						</xsd:appinfo>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="topic" type="xsd:string" />
+				<xsd:attribute name="converter" type="xsd:string" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="abstract-zmq-message-endpoint">
+		<xsd:attribute name="address" type="xsd:string" />
+		<xsd:attribute name="bind" type="xsd:string" />
+		<xsd:attribute name="context-manager" type="xsd:string" default="zmqContextManager" />
+		<xsd:attribute name="socket-type" type="xsd:string" />
+	</xsd:complexType>
+</xsd:schema>

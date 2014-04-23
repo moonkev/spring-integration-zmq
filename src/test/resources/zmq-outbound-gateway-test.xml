@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-zmq="http://github.com/moonkev/spring-integration-zmq"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://github.com/moonkev/spring-integration-zmq http://github.com/moonkev/spring-integration-zmq/spring-integration-zmq.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		
+	<int:channel id="zmq.in" />
+	
+	<int-zmq:context-manager />
+	
+	<int-zmq:outbound-gateway
+		request-channel="zmq.in"
+		reply-channel="zmq.out"
+		address="tcp://127.0.0.1:9998"
+		socket-type="REQ"
+		send-timeout="100"
+		receive-timeout="100" />
+		
+	<int:gateway 
+		id="gateway"
+		service-interface="moonkev.spring.integration.zmq.Gateway"
+		default-request-channel="zmq.in" />
+		
+	<int:logging-channel-adapter id="zmq.out" level="INFO" log-full-message="true" />
+</beans>
