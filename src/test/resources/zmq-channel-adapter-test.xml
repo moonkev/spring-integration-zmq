@@ -10,13 +10,13 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 		
 		
-	<bean id="msgpackContainerToByteArrayConverter" class="moonkev.spring.integration.zmq.msgpack.MsgpackContainerToByteArrayConverter" />
+	<bean id="msgpackContainerToByteArrayConverter" class="com.github.moonkev.spring.integration.zmq.msgpack.MsgpackContainerToByteArrayConverter" />
 	
-	<bean id="byteArrayToMsgpackContainerConverter" class="moonkev.spring.integration.zmq.msgpack.ByteArrayToMsgpackContainerConverter" />
+	<bean id="byteArrayToMsgpackContainerConverter" class="com.github.moonkev.spring.integration.zmq.msgpack.ByteArrayToMsgpackContainerConverter" />
 	
-	<bean id="mapToMsgpackByteArrayConverter" class="moonkev.spring.integration.zmq.convert.MapToMsgpackByteArrayConverter" />
+	<bean id="mapToMsgpackByteArrayConverter" class="com.github.moonkev.spring.integration.zmq.convert.MapToMsgpackByteArrayConverter" />
 	
-	<bean id="msgpackByteArrayToMapConverter" class="moonkev.spring.integration.zmq.convert.MsgpackByteArrayToMapConverter" />
+	<bean id="msgpackByteArrayToMapConverter" class="com.github.moonkev.spring.integration.zmq.convert.MsgpackByteArrayToMapConverter" />
 	
 	<int-zmq:context-manager />
 		
@@ -69,17 +69,17 @@
 
 	<int:gateway 
 		id="msgpackContainerGateway"
-		service-interface="moonkev.spring.integration.zmq.Gateway"
+		service-interface="com.github.moonkev.spring.integration.zmq.Gateway"
 		default-request-channel="msgpack.container.zmq.out" />
 		
 	<int:gateway 
 		id="msgpackMapGateway"
-		service-interface="moonkev.spring.integration.zmq.Gateway"
+		service-interface="com.github.moonkev.spring.integration.zmq.Gateway"
 		default-request-channel="msgpack.map.zmq.out" />
 		
 	<int:gateway 
 		id="jsonMapGateway"
-		service-interface="moonkev.spring.integration.zmq.Gateway"
+		service-interface="com.github.moonkev.spring.integration.zmq.Gateway"
 		default-request-channel="json.map.zmq.out" />
 		
 </beans>

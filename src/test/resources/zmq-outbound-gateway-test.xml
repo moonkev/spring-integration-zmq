@@ -23,7 +23,7 @@
 		
 	<int:gateway 
 		id="gateway"
-		service-interface="moonkev.spring.integration.zmq.Gateway"
+		service-interface="com.github.moonkev.spring.integration.zmq.Gateway"
 		default-request-channel="zmq.in" />
 		
 	<int:logging-channel-adapter id="zmq.out" level="INFO" log-full-message="true" />

@@ -1,1 +1,1 @@
-http\://github.com/moonkev/spring-integration-zmq=moonkev.spring.integration.zmq.schema.NamespaceHandler
+http\://github.com/moonkev/spring-integration-zmq=com.github.moonkev.spring.integration.zmq.schema.NamespaceHandler
