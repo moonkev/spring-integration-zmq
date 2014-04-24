@@ -13,7 +13,7 @@ import zmq.ZError;
 public class ZmqEndpointUtil {
 
 	
-	public static int setSocketType(String socketTypeName) {
+	public static int socketTypeFromName(String socketTypeName) {
 		Field socketTypeField = ReflectionUtils.findField(ZMQ.class, socketTypeName);
 		if (socketTypeField == null  || socketTypeField.getType() != int.class) {
 			throw new BeanCreationException(String.format("%s is not a valid ZMQ socket type", socketTypeName));

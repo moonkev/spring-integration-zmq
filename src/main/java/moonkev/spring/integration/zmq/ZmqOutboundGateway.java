@@ -152,7 +152,7 @@ public class ZmqOutboundGateway extends AbstractReplyProducingMessageHandler imp
 	}
 	
 	public void setSocketType(String socketTypeName) {
-		this.socketType = ZmqEndpointUtil.setSocketType(socketTypeName);
+		this.socketType = ZmqEndpointUtil.socketTypeFromName(socketTypeName);
 	}
 	
 	public void setRequestConverter(Converter<Object, byte[]> requestConverter) {

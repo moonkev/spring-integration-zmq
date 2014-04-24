@@ -73,6 +73,7 @@ public class ZmqReceivingChannelAdapter extends MessageProducerSupport implement
 				logger.error("Exception in zmq receiving channel adapter", e);
 			}
 		}
+		
 		socket.close();
 	}
 		
@@ -106,7 +107,7 @@ public class ZmqReceivingChannelAdapter extends MessageProducerSupport implement
 	}
 	
 	public void setSocketType(String socketTypeName) {
-		socketType = ZmqEndpointUtil.setSocketType(socketTypeName);
+		socketType = ZmqEndpointUtil.socketTypeFromName(socketTypeName);
 	}
 	
 	public void setConverter(Converter<byte[], Object> converter) {

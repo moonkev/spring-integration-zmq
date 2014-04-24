@@ -2,7 +2,6 @@ package moonkev.spring.integration.zmq;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.Lifecycle;
@@ -60,7 +59,7 @@ public class ZmqSendingMessageHandler extends AbstractMessageHandler implements 
 		
 		while (!Thread.currentThread().isInterrupted()) {
 			try {
-				Message<?> message = messageQueue.poll(Long.MAX_VALUE, TimeUnit.DAYS);
+				Message<?> message = messageQueue.take();
 				byte[] payload = converter.convert(message.getPayload());
 				if (topicBytes == null) {
 					socket.send(payload);
@@ -76,13 +75,14 @@ public class ZmqSendingMessageHandler extends AbstractMessageHandler implements 
 					System.arraycopy(payload, 0, topicPayload, msgTopic.length, payload.length);
 					socket.send(topicPayload);
 				}
-			} catch (Exception e) {
-                if (!contextManager.isRunning()) {
+			} catch (Throwable t) {
+                if (!running) {
                 	break;
                 }
-                logger.error("Exception in zmq sending message handler", e);
+                logger.error("Exception in zmq sending message handler", t);
 			}
 		}
+		
 		socket.close();
 	}
 
@@ -94,7 +94,7 @@ public class ZmqSendingMessageHandler extends AbstractMessageHandler implements 
 				socketThread.start();
 				try {
 					synchronized (startupMonitor) {
-						startupMonitor.wait();
+						startupMonitor.wait(5000);
 					}
 				} catch (InterruptedException e) {
 					throw new BeanCreationException("Lifecycle.start() Interupted while creating zmq socket thread.", e);
@@ -107,8 +107,8 @@ public class ZmqSendingMessageHandler extends AbstractMessageHandler implements 
 	public void stop() {
 		synchronized (lifecycleMonitor) {
 			if (running) {
-				socketThread.interrupt();
 				running = false;
+				socketThread.interrupt();
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class ZmqSendingMessageHandler extends AbstractMessageHandler implements 
 	}
 	
 	public void setSocketType(String socketTypeName) {
-		socketType = ZmqEndpointUtil.setSocketType(socketTypeName);
+		socketType = ZmqEndpointUtil.socketTypeFromName(socketTypeName);
 	}
 	
 	public void setConverter(Converter<Object, byte[]> converter) {
