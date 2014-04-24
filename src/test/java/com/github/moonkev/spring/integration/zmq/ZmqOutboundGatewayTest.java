@@ -28,6 +28,6 @@ public class ZmqOutboundGatewayTest extends AbstractTestNGSpringContextTests {
 				Thread.sleep(1000); 
 			}
 		}
-		Thread.sleep(10000);
+		Thread.sleep(1000);
 	}
 }

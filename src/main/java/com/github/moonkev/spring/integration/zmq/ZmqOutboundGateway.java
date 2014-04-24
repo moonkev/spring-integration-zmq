@@ -29,17 +29,17 @@ public class ZmqOutboundGateway extends AbstractReplyProducingMessageHandler imp
 	
 	private boolean bind;
 	
-	private int receiveTimeout;
-	
 	protected final Object lifecycleMonitor = new Object();
 	
 	private Converter<Object, byte[]> requestConverter;
 	
 	private Converter<byte[], Object> replyConverter;
 	
-	private int socketType = 10000;
+	private int socketType;
 	
 	private int sendTimeout = 10000;
+	
+	private int receiveTimeout = 10000;
 	
 	private int linger = 0;
 	
@@ -100,7 +100,6 @@ public class ZmqOutboundGateway extends AbstractReplyProducingMessageHandler imp
 			if (!running) {
 				Future<Void> response = executorService.submit(new Callable<Void>() {
 					public Void call() throws Exception {
-						System.out.println("Did start");
 						ZmqOutboundGateway.this.connect();
 						return null;
 					}
