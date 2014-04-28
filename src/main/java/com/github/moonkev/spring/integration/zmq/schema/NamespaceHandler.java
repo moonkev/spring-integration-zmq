@@ -8,6 +8,7 @@ public class NamespaceHandler extends AbstractIntegrationNamespaceHandler {
 		this.registerBeanDefinitionParser("inbound-channel-adapter", new ZmqInboundChannelAdapterParser());
 		this.registerBeanDefinitionParser("outbound-channel-adapter", new ZmqOutboundChannelAdapterParser());
 		this.registerBeanDefinitionParser("outbound-gateway", new ZmqOutboundGatewayParser());
+		this.registerBeanDefinitionParser("lazy-pirate-gateway", new ZmqLazyPirateGatewayParser());
 		this.registerBeanDefinitionParser("context-manager", new ZmqContextManagerParser());
 	}
 }

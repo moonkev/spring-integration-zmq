@@ -9,8 +9,8 @@ import org.w3c.dom.Element;
 import com.github.moonkev.spring.integration.zmq.convert.JsonByteArrayToMapConverter;
 import com.github.moonkev.spring.integration.zmq.convert.MapToJsonByteArrayConverter;
 
-public class ZmqOutboundGatewayParser extends AbstractConsumerEndpointParser {
-
+public class ZmqLazyPirateGatewayParser extends AbstractConsumerEndpointParser {
+ 
 	protected String getInputChannelAttributeName() {
 		return "request-channel";
 	}
@@ -18,11 +18,10 @@ public class ZmqOutboundGatewayParser extends AbstractConsumerEndpointParser {
 	protected BeanDefinitionBuilder parseHandler(Element element,
 			ParserContext parserContext) {
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(
-				"com.github.moonkev.spring.integration.zmq.ZmqOutboundGateway");
+				"com.github.moonkev.spring.integration.zmq.ZmqLazyPirateGateway");
 		
 		builder.addPropertyValue("address", element.getAttribute("address"));
-		builder.addPropertyValue("socketType", element.getAttribute("socket-type"));
-		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, "bind");
+		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, "retry-count");
 		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, "send-timeout", "socketSendTimeout");
 		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, "receive-timeout", "socketReceiveTimeout");
 		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, "linger");
@@ -41,6 +40,6 @@ public class ZmqOutboundGatewayParser extends AbstractConsumerEndpointParser {
 			builder.addPropertyReference("reply-converter", element.getAttribute("replyConverter"));
 		}
 
-		return builder;		
+		return builder;	
 	}
 }
