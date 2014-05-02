@@ -1,0 +1,104 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.github.moonkev'
+version = '0.1-SNAPSHOT'
+
+targetCompatibility=1.6
+sourceCompatibility=1.6
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'org.springframework.integration', name: 'spring-integration-core', version: '3.0.2.RELEASE'
+	compile group: 'org.zeromq', name: 'jeromq', version: '0.3.3'
+	compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
+	compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+	compile group: 'org.msgpack', name: 'msgpack', version: '0.6.10'
+	testCompile group: 'org.testng', name: 'testng', version: '6.8.8'
+	testCompile group: 'org.springframework', name: 'spring-test', version: '4.0.3.RELEASE'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives javadocJar
+}
+
+signing {
+	required { gradle.taskGraph.hasTask("uploadArchives") }
+	sign configurations.archives
+}
+
+test {
+	useTestNG()
+	testLogging.showStandardStreams = true
+	minHeapSize = "128m"
+	maxHeapSize = "512m"
+	jvmArgs '-XX:MaxPermSize=256m'
+	beforeTest { descriptor ->
+		logger.lifecycle("Running test: " + descriptor)
+	}
+	onOutput { descriptor, event ->
+		logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+	}
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+			
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+			
+			pom.project {
+				name 'Spring Integration ZMQ'
+				packaging 'jar'
+				description 'ZeroMQ adapters for Spring Integration'
+				url 'https://github.com/moonkev/spring-integration-zmq'
+
+				scm {
+					url 'https://github.com/moonkev/spring-integration-zmq'
+					connection 'scm:git:git@github.com:moonkev/spring-integration-zmq.git'
+					developerConnection 'sscm:git:git@github.com:moonkev/spring-integration-zmq.git'
+				}
+
+				licenses {
+					license {
+						name 'The Apache Software License, Version 2.0'
+						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						distribution 'repo'
+					}
+				}
+
+				developers {
+					developer {
+						id 'moonkev'
+						name 'Kevin Mooney'
+					}
+				}
+			}
+		}
+	}
+}
