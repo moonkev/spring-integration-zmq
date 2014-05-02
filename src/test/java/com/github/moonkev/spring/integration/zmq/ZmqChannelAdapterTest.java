@@ -23,9 +23,9 @@ public class ZmqChannelAdapterTest extends AbstractTestNGSpringContextTests {
 	@Autowired
 	Gateway jsonMapGateway;
 	
-	@Test
+	@Test(groups = {"integration"})
 	public void msgpackContainerChannelTest() throws Exception {
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 10; ++i) {
 			MsgpackContainer container = new MsgpackContainer();
 			container.doubleField = 25.5;
 			container.intField = i;
@@ -41,9 +41,9 @@ public class ZmqChannelAdapterTest extends AbstractTestNGSpringContextTests {
 		Thread.sleep(100);
 	}
 	
-	@Test
+	@Test(groups = {"integration"})
 	public void msgpackMapChannelTest() throws Exception {
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 10; ++i) {
 			Map<Object, Object> map = new HashMap<Object, Object>();
 			map.put("Count", i);
 			map.put("One", 1);
@@ -54,9 +54,9 @@ public class ZmqChannelAdapterTest extends AbstractTestNGSpringContextTests {
 		Thread.sleep(100);
 	}
 	
-	@Test
+	@Test(groups = {"integration"})
 	public void jsonMapTest() throws Exception {
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 10; ++i) {
 			Map<Object, Object> map = new HashMap<Object, Object>();
 			map.put("Count", i);
 			map.put("One", 1);

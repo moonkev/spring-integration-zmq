@@ -128,7 +128,7 @@ public class ZmqLazyPirateGateway extends AbstractReplyProducingMessageHandler
 					}
 					if (items[0].isReadable()) {
 						byte[] reply = socket.recv();
-						return reply;
+						return replyConverter.convert(reply);
 					} else if (--retriesLeft == 0) {
 						break;
 					} else {

@@ -17,7 +17,7 @@ public class ZmqOutboundGatewayTest extends AbstractTestNGSpringContextTests {
 	
 	@Test(groups = {"integration"})
 	public void testOutboundGateway() throws Exception {
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 10; ++i) {
 			try {
 				Map<Object, Object> map = new HashMap<Object, Object>();
 				map.put("message", i);
