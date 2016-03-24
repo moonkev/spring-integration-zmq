@@ -8,10 +8,10 @@ import java.util.concurrent.Future;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.Lifecycle;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
-import org.springframework.integration.MessageHandlingException;
 import org.springframework.integration.handler.AbstractReplyProducingMessageHandler;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHandlingException;
 import org.springframework.util.Assert;
 import org.zeromq.ZMQ.Socket;
 

@@ -3,8 +3,8 @@ package com.github.moonkev.spring.integration.zmq;
 import java.lang.reflect.Field;
 
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHandlingException;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHandlingException;
 import org.springframework.util.ReflectionUtils;
 import org.zeromq.ZMQ;
 
